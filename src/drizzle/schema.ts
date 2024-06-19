@@ -1,20 +1,12 @@
+import { relations } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
   text,
   primaryKey,
 } from "drizzle-orm/sqlite-core";
+import { nanoid } from "nanoid";
 import type { AdapterAccountType } from "next-auth/adapters";
-
-export const users = sqliteTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email").notNull(),
-  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
-  image: text("image"),
-});
 
 export const accounts = sqliteTable(
   "account",
@@ -61,3 +53,41 @@ export const verificationTokens = sqliteTable(
     }),
   })
 );
+
+export const users = sqliteTable("author", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid(10)),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  image: text("image"),
+  bio: text("bio"),
+  username: text("username"),
+  upvotes: integer("upvotes").default(0),
+});
+
+export const tils = sqliteTable("til", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid(12)),
+  title: text("title").notNull(),
+  content: text("content"),
+  upvotes: integer("upvotes").default(0),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export type Til = typeof tils.$inferSelect;
+
+export const userRelations = relations(users, ({ many }) => ({
+  tils: many(tils),
+}));
+
+export const tilsRelations = relations(tils, ({ one }) => ({
+  user: one(users, {
+    fields: [tils.userId],
+    references: [users.id],
+  }),
+}));
