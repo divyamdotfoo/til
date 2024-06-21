@@ -1,5 +1,5 @@
 import { SignOutBtn } from "@/components/btns/sign-out";
-import { getUserProfile } from "../actions";
+import { getUserProfile } from "@/actions";
 
 export default async function Page({
   params,

@@ -67,6 +67,8 @@ export const users = sqliteTable("author", {
   upvotes: integer("upvotes").default(0),
 });
 
+export type User = typeof users.$inferSelect;
+
 export const tils = sqliteTable("til", {
   id: text("id")
     .primaryKey()

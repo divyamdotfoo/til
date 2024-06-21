@@ -1,4 +1,4 @@
-import { getTil } from "@/app/actions";
+import { getTil } from "@/actions";
 
 export default async function Page({ params }: { params: { til_id: string } }) {
   const { til_id: id } = params;
