@@ -6,18 +6,24 @@ import Link from "next/link";
 
 export function Navbar({
   user,
+  showAvatar,
 }: {
   user?: { username: string | null } & User;
+  showAvatar?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between py-2">
+    <div className="flex items-center justify-between py-2 w-full">
       <Link href={"/"} className=" cursor-pointer">
         <h1 className={"font-medium text-5xl"}>til</h1>
       </Link>
       <div className=" flex items-center gap-4 ">
         <ThemeBtn />
         <GithubLink />
-        {user ? <UserBtn user={user} /> : <SignInBtn />}
+        {showAvatar === false ? null : user ? (
+          <UserBtn user={user} />
+        ) : (
+          <SignInBtn />
+        )}
       </div>
     </div>
   );

@@ -1,8 +1,20 @@
 "use server";
+import { auth } from "@/auth";
 import { db } from "@/drizzle/db";
-import { Til, tils, users } from "@/drizzle/schema";
+import { Til, User, tils, users } from "@/drizzle/schema";
 import { eq, or, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
+
+export const updateUserProfile = async (updatedUserData: Partial<User>) => {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) return false;
+  await db
+    .update(users)
+    .set(updatedUserData)
+    .where(eq(users.id, session.user.id));
+
+  return true;
+};
 
 export const getUserProfile = async (userIdOrName: string) => {
   const user = await db

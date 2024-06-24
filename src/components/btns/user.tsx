@@ -1,6 +1,6 @@
 "use client";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { LogOut, User2 } from "lucide-react";
+import { LogOut, Settings, User2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { User } from "next-auth";
 import { Separator } from "../ui/separator";
@@ -37,6 +37,14 @@ export function UserBtn({
         >
           <User2 className=" w-5 h-5" />
           <span>Profile</span>
+        </button>
+        <Separator />
+        <button
+          className=" flex items-center gap-4 px-4 py-2  w-full font-medium opacity-90 hover:opacity-100 transition-all"
+          onClick={() => {}}
+        >
+          <Settings className=" w-5 h-5" />
+          <span>Settings</span>
         </button>
         <Separator />
         <button

@@ -1,5 +1,6 @@
 import { SignOutBtn } from "@/components/btns/sign-out";
 import { getUserProfile } from "@/actions";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   params,
@@ -8,7 +9,7 @@ export default async function Page({
 }) {
   const { username } = params;
   const user = await getUserProfile(username);
-  if (!user) return <h1>we are not sure wht you are looking for</h1>;
+  if (!user) notFound();
 
   return (
     <div>

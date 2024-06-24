@@ -1,8 +1,12 @@
+import { auth, providerMap } from "@/auth";
 import { SignInDiscord, SignInGithub } from "@/components/btns/sign-in";
+import { redirect } from "next/navigation";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+  if (session) redirect("/");
   return (
-    <div className=" w-screen h-screen flex items-center justify-center">
+    <div className=" w-full h-full flex items-center justify-center ">
       <div className=" max-w-80">
         <h1 className=" text-7xl tracking-wide font-medium py-4">til</h1>
         <h2 className="text-xl font-medium opacity-80">

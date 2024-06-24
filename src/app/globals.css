@@ -69,3 +69,11 @@
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
 }
+
+.prose-span span:not(.cm-editor span),
+br {
+  @apply text-[#000] dark:text-[#fff];
+}
+.prose {
+  max-width: 100% !important;
+}

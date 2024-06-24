@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Quicksand } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/providers";
-import { auth } from "@/auth";
-import { Navbar } from "@/components/navbar";
 const quickSand = Quicksand({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,9 +15,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-  const user = session?.user;
-
   return (
     <html lang="en">
       <body className={`${quickSand.className} bg-background text-foreground`}>
@@ -30,10 +25,7 @@ export default async function RootLayout({
             disableTransitionOnChange
             attribute="class"
           >
-            <div className="px-4 max-w-5xl mx-auto">
-              <Navbar user={user} />
-              {children}
-            </div>
+            {children}
           </ThemeProvider>
         </SessionProvider>
       </body>
