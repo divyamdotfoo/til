@@ -1,4 +1,9 @@
 "use client";
+const MarkdownEditor = dynamic(
+  () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
+  { ssr: false }
+);
+
 import { Quicksand } from "next/font/google";
 import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
 import {
@@ -21,28 +26,60 @@ import {
   ListsToggle,
   BlockTypeSelect,
   InsertCodeBlock,
-  InsertAdmonition,
-  diffSourcePlugin,
-  DiffSourceToggleWrapper,
+  ButtonWithTooltip,
 } from "@mdxeditor/editor";
-import "@mdxeditor/editor/style.css";
-import { useRef } from "react";
 
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import "@mdxeditor/editor/style.css";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import { MdSvg, RichTextSvg } from "./ui/svgs";
 const quickSand = Quicksand({ subsets: ["latin"] });
 
 export function Editor() {
   const editorRef = useRef<MDXEditorMethods>(null);
+  const { theme } = useTheme();
+  const [tab, setTab] = useState<"rich-text" | "source-mode">("rich-text");
+
+  const router = useRouter();
+  useEffect(() => {
+    if (editorRef.current) {
+      const md = editorRef.current.getMarkdown();
+      editorRef.current.setMarkdown("");
+      // to change the theme of rendered code blocks
+      setTimeout(() => {
+        if (editorRef.current) {
+          editorRef.current.setMarkdown(md);
+          editorRef.current.focus();
+        }
+      }, 200);
+    }
+  }, [theme]);
+
   return (
     <>
       <MDXEditor
-        className=""
-        autoFocus
+        className={`${
+          theme === "light"
+            ? "_light_1tncs_1 _light-theme_1tncs_1"
+            : "_dark_1tncs_1 _dark-theme_1tncs_1"
+        }
+        `}
         ref={editorRef}
-        markdown="# hello there"
+        markdown="# React launched its compiler"
         onChange={(e) => {
           console.log(e);
         }}
-        contentEditableClassName={`prose dark:prose-invert prose-span md:min-h-96 bg-popover shadow-md rounded-br-md rounded-bl-md  ${quickSand.className}`}
+        contentEditableClassName={`prose dark:prose-invert prose-span md:min-h-96 bg-popover shadow-md rounded-br-md rounded-bl-md  ${
+          quickSand.className
+        } ${
+          theme === "light"
+            ? "_light_1tncs_1 _light-theme_1tncs_1"
+            : "_dark_1tncs_1 _dark-theme_1tncs_1"
+        }
+           ${tab === "source-mode" ? "hidden" : ""}
+        `}
         plugins={[
           headingsPlugin(),
           linkPlugin(),
@@ -52,25 +89,7 @@ export function Editor() {
           thematicBreakPlugin(),
           markdownShortcutPlugin(),
           toolbarPlugin({
-            toolbarContents: () => (
-              <>
-                <DiffSourceToggleWrapper options={["rich-text", "source"]}>
-                  <BoldItalicUnderlineToggles />
-                  <Separator />
-                  <StrikeThroughSupSubToggles />
-                  <Separator />
-                  <ListsToggle />
-                  <Separator />
-                  <BlockTypeSelect />
-                  <Separator />
-                  <CreateLink />
-                  <InsertImage />
-                  <Separator />
-                  <InsertCodeBlock />
-                  <InsertAdmonition />
-                </DiffSourceToggleWrapper>
-              </>
-            ),
+            toolbarContents: () => <ToolBarContents setTab={setTab} />,
           }),
           codeMirrorPlugin({
             codeBlockLanguages: {
@@ -100,12 +119,54 @@ export function Editor() {
               dockerfile: "Dockerfile",
               graphql: "GraphQL",
             },
-            codeMirrorExtensions: [githubDark],
+            codeMirrorExtensions:
+              theme === "light" ? [githubLight] : [githubDark],
           }),
-
-          diffSourcePlugin({ viewMode: "rich-text" }),
         ]}
       />
     </>
+  );
+}
+
+function ToolBarContents({
+  setTab,
+}: {
+  setTab: Dispatch<SetStateAction<"rich-text" | "source-mode">>;
+}) {
+  return (
+    <div className=" w-full flex items-center justify-between">
+      <div className=" flex items-center">
+        <BoldItalicUnderlineToggles />
+        <Separator />
+        <StrikeThroughSupSubToggles />
+        <Separator />
+        <ListsToggle />
+        <Separator />
+        <BlockTypeSelect />
+        <Separator />
+        <CreateLink />
+        <InsertImage />
+        <Separator />
+        <InsertCodeBlock />
+      </div>
+      <div className=" flex items-center ">
+        <ButtonWithTooltip
+          title="Rich text"
+          onClick={() =>
+            setTab((p) => (p === "rich-text" ? "source-mode" : "rich-text"))
+          }
+        >
+          <RichTextSvg />
+        </ButtonWithTooltip>
+        <ButtonWithTooltip
+          title="Source Mode"
+          onClick={() =>
+            setTab((p) => (p === "rich-text" ? "source-mode" : "rich-text"))
+          }
+        >
+          <MdSvg />
+        </ButtonWithTooltip>
+      </div>
+    </div>
   );
 }

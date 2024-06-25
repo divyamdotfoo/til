@@ -77,3 +77,15 @@ br {
 .prose {
   max-width: 100% !important;
 }
+
+._selectTrigger_yms4a_307 {
+  @apply bg-[transparent!important];
+}
+
+.mdxeditor-select-content {
+  @apply max-h-60 bg-[transparent!important];
+}
+
+.mdxeditor-popup-container {
+  @apply bg-transparent;
+}

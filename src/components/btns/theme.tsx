@@ -5,8 +5,8 @@ export function ThemeBtn() {
   const { setTheme, theme } = useTheme();
   return (
     <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
-      <MoonStar className=" hidden dark:block w-5 h-5" />
-      <Sun className=" w-5 h-5 dark:hidden" />
+      <MoonStar className=" hidden dark:block w-5 h-5 hover:scale-105" />
+      <Sun className=" w-5 h-5 dark:hidden hover:scale-105" />
     </button>
   );
 }
