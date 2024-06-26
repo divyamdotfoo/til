@@ -4,8 +4,7 @@ import { Loader2, PencilIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { DiscordSvg, GithubSvg } from "../navbar";
-import {} from "lucide-react";
+import { DiscordSvg, GithubSvg } from "../ui/svgs";
 export function SignInBtn() {
   const [hover, setHover] = useState(false);
   const handler = async () => {

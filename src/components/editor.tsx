@@ -1,11 +1,9 @@
 "use client";
-const MarkdownEditor = dynamic(
-  () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
-  { ssr: false }
-);
-
 import { Quicksand } from "next/font/google";
-import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
+import { dracula } from "@uiw/codemirror-theme-dracula";
+import { langs } from "@uiw/codemirror-extensions-langs";
+import "@mdxeditor/editor/style.css";
+import "../app/editor.css";
 import {
   MDXEditor,
   headingsPlugin,
@@ -26,31 +24,24 @@ import {
   ListsToggle,
   BlockTypeSelect,
   InsertCodeBlock,
-  ButtonWithTooltip,
+  diffSourcePlugin,
+  DiffSourceToggleWrapper,
 } from "@mdxeditor/editor";
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import "@mdxeditor/editor/style.css";
+import { useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-import { MdSvg, RichTextSvg } from "./ui/svgs";
+import { useLocalStorage } from "@/lib/hooks";
 const quickSand = Quicksand({ subsets: ["latin"] });
 
 export function Editor() {
   const editorRef = useRef<MDXEditorMethods>(null);
   const { theme } = useTheme();
-  const [tab, setTab] = useState<"rich-text" | "source-mode">("rich-text");
+  const { localMd, updateLocalMd } = useLocalStorage("til-md", editorRef);
 
-  const router = useRouter();
   useEffect(() => {
     if (editorRef.current) {
-      const md = editorRef.current.getMarkdown();
-      editorRef.current.setMarkdown("");
-      // to change the theme of rendered code blocks
       setTimeout(() => {
         if (editorRef.current) {
-          editorRef.current.setMarkdown(md);
           editorRef.current.focus();
         }
       }, 200);
@@ -58,115 +49,98 @@ export function Editor() {
   }, [theme]);
 
   return (
-    <>
+    <div className=" py-4 max-w-3xl mx-auto">
       <MDXEditor
-        className={`${
+        placeholder="What did you learned today?"
+        className={` bg-editor ${
           theme === "light"
-            ? "_light_1tncs_1 _light-theme_1tncs_1"
-            : "_dark_1tncs_1 _dark-theme_1tncs_1"
+            ? "_light_1tncs_1 _light-theme_1tncs_1 shadow-md rounded-md"
+            : "_dark_1tncs_1 _dark-theme_1tncs_1 shadow-md rounded-md"
         }
         `}
         ref={editorRef}
-        markdown="# React launched its compiler"
-        onChange={(e) => {
-          console.log(e);
+        markdown={""}
+        onChange={(md) => {
+          updateLocalMd(md);
         }}
-        contentEditableClassName={`prose dark:prose-invert prose-span md:min-h-96 bg-popover shadow-md rounded-br-md rounded-bl-md  ${
+        contentEditableClassName={`prose dark:prose-invert prose-span md:h-96 overflow-auto scroll-container ${
           quickSand.className
         } ${
           theme === "light"
             ? "_light_1tncs_1 _light-theme_1tncs_1"
             : "_dark_1tncs_1 _dark-theme_1tncs_1"
         }
-           ${tab === "source-mode" ? "hidden" : ""}
         `}
-        plugins={[
-          headingsPlugin(),
-          linkPlugin(),
-          listsPlugin(),
-          quotePlugin(),
-          codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
-          thematicBreakPlugin(),
-          markdownShortcutPlugin(),
-          toolbarPlugin({
-            toolbarContents: () => <ToolBarContents setTab={setTab} />,
-          }),
-          codeMirrorPlugin({
-            codeBlockLanguages: {
-              js: "JavaScript",
-              ts: "TypeScript",
-              py: "Python",
-              java: "Java",
-              c: "C",
-              cpp: "C++",
-              csharp: "C#",
-              go: "Go",
-              ruby: "Ruby",
-              php: "PHP",
-              swift: "Swift",
-              kotlin: "Kotlin",
-              rust: "Rust",
-              scala: "Scala",
-              sql: "SQL",
-              html: "HTML",
-              css: "CSS",
-              markdown: "Markdown",
-              json: "JSON",
-              xml: "XML",
-              yaml: "YAML",
-              bash: "Bash",
-              shell: "Shell",
-              dockerfile: "Dockerfile",
-              graphql: "GraphQL",
-            },
-            codeMirrorExtensions:
-              theme === "light" ? [githubLight] : [githubDark],
-          }),
-        ]}
+        plugins={plugins()}
       />
-    </>
-  );
-}
-
-function ToolBarContents({
-  setTab,
-}: {
-  setTab: Dispatch<SetStateAction<"rich-text" | "source-mode">>;
-}) {
-  return (
-    <div className=" w-full flex items-center justify-between">
-      <div className=" flex items-center">
-        <BoldItalicUnderlineToggles />
-        <Separator />
-        <StrikeThroughSupSubToggles />
-        <Separator />
-        <ListsToggle />
-        <Separator />
-        <BlockTypeSelect />
-        <Separator />
-        <CreateLink />
-        <InsertImage />
-        <Separator />
-        <InsertCodeBlock />
-      </div>
-      <div className=" flex items-center ">
-        <ButtonWithTooltip
-          title="Rich text"
-          onClick={() =>
-            setTab((p) => (p === "rich-text" ? "source-mode" : "rich-text"))
-          }
-        >
-          <RichTextSvg />
-        </ButtonWithTooltip>
-        <ButtonWithTooltip
-          title="Source Mode"
-          onClick={() =>
-            setTab((p) => (p === "rich-text" ? "source-mode" : "rich-text"))
-          }
-        >
-          <MdSvg />
-        </ButtonWithTooltip>
-      </div>
     </div>
   );
 }
+
+function ToolBarContents() {
+  return (
+    <DiffSourceToggleWrapper options={["rich-text", "source"]}>
+      <BoldItalicUnderlineToggles />
+      <Separator />
+      <StrikeThroughSupSubToggles />
+      <Separator />
+      <ListsToggle />
+      <Separator />
+      <BlockTypeSelect />
+      <Separator />
+      <CreateLink />
+      <InsertImage />
+      <Separator />
+      <InsertCodeBlock />
+    </DiffSourceToggleWrapper>
+  );
+}
+
+const plugins = () => [
+  headingsPlugin(),
+  linkPlugin(),
+  listsPlugin(),
+  quotePlugin(),
+  codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
+  thematicBreakPlugin(),
+  markdownShortcutPlugin(),
+  diffSourcePlugin({
+    viewMode: "rich-text",
+    codeMirrorExtensions: [dracula, langs.markdown()],
+  }),
+  toolbarPlugin({
+    toolbarContents: () => <ToolBarContents />,
+  }),
+  codeMirrorPlugin({
+    codeBlockLanguages: supportedLangs(),
+    codeMirrorExtensions: [dracula],
+  }),
+];
+
+const supportedLangs = () => ({
+  js: "JavaScript",
+  ts: "TypeScript",
+  python: "Python",
+  java: "Java",
+  c: "C",
+  cpp: "C++",
+  csharp: "C#",
+  go: "Go",
+  ruby: "Ruby",
+  php: "PHP",
+  swift: "Swift",
+  kotlin: "Kotlin",
+  rust: "Rust",
+  scala: "Scala",
+  sql: "SQL",
+  html: "HTML",
+  css: "CSS",
+  markdown: "Markdown",
+  json: "JSON",
+  xml: "XML",
+  yaml: "YAML",
+  bash: "Bash",
+  shell: "Shell",
+  dockerfile: "Dockerfile",
+  graphql: "GraphQL",
+});

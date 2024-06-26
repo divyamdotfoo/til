@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.prose-span span:not(.cm-editor span),
+br {
+  @apply text-[#000] dark:text-[#fff];
+}
+
+.prose {
+  max-width: 100%;
+}
+
+.mdxeditor-select-content {
+  @apply max-h-60 bg-popover text-popover-foreground;
+}
+
+._codeMirrorWrapper_yms4a_391 {
+  @apply border-none p-0;
+}
+
+._codeMirrorWrapper_yms4a_391 .cm-editor {
+  @apply rounded-md;
+}
+
+._codeMirrorToolbar_yms4a_408 {
+  @apply bg-transparent;
+}
+
+._selectTrigger_yms4a_307 {
+  @apply dark:bg-editor;
+}
+._iconButton_yms4a_456 {
+  color: white !important;
+}
+._iconButton_yms4a_456:hover {
+  opacity: 0.8;
+  transition: all;
+}
+.mdxeditor .cm-editor {
+  @apply p-2;
+}
+
+.mdxeditor .cm-gutters {
+  @apply hidden;
+}
+
+.mdxeditor-source-editor .cm-editor {
+  @apply h-96 overflow-auto rounded-bl-md rounded-br-md shadow-md;
+}
+
+.cm-matchingBracket {
+  background-color: transparent !important;
+  outline: none !important;
+}
+
+._listItemUnchecked_1tncs_74:before,
+._listItemChecked_1tncs_73:before {
+  top: 7px !important;
+}
+
+button {
+  cursor: pointer !important;
+}
+
+@layer components {
+  .scroll-container::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .scroll-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .scroll-container::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 20px;
+    }
+  }
+  .scroll-container::-webkit-scrollbar-track {
+    margin: 5px;
+  }
+
+  .scroll-container::-webkit-scrollbar-corner {
+    display: none;
+  }
+  .scroll-container::-webkit-scrollbar-button {
+    display: none;
+  }
+}
+
+.cm-scroller::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+}
+.cm-scroller::-webkit-scrollbar-track {
+  margin: 5px;
+}
+
+.cm-scroller::-webkit-scrollbar-corner {
+  display: none;
+}
+.cm-scroller::-webkit-scrollbar-button {
+  display: none;
+}

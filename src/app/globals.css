@@ -6,6 +6,7 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
+    --editor: 0% 0% 100%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
@@ -29,6 +30,7 @@
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
+    --editor: 220 6% 10%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
@@ -68,24 +70,4 @@
     transform: translateY(-25%);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
-}
-
-.prose-span span:not(.cm-editor span),
-br {
-  @apply text-[#000] dark:text-[#fff];
-}
-.prose {
-  max-width: 100% !important;
-}
-
-._selectTrigger_yms4a_307 {
-  @apply bg-[transparent!important];
-}
-
-.mdxeditor-select-content {
-  @apply max-h-60 bg-[transparent!important];
-}
-
-.mdxeditor-popup-container {
-  @apply bg-transparent;
 }

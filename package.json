@@ -19,6 +19,8 @@
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@uiw/codemirror-extensions-langs": "^4.22.2",
+    "@uiw/codemirror-theme-dracula": "^4.22.2",
     "@uiw/codemirror-theme-github": "^4.22.2",
     "@uiw/react-markdown-editor": "^6.1.2",
     "class-variance-authority": "^0.7.0",
