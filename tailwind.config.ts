@@ -26,6 +26,7 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         editor: "hsl(var(--editor))",
+        til: "hsl(var(--til))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -76,6 +77,8 @@ const config = {
         "pop-in": "pop-in 0.2s ease-out 1s forwards",
         "pop-out": "pop-out 0.2s ease-out forwards",
         "drop-ball": "bounce 0.4s 2 forwards",
+        increment: "increment 0.2s ease-out 0.3s forwards",
+        decrement: "decrement 0.2s ease-in forwards ",
       },
     },
   },

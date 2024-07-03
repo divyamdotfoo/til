@@ -1,11 +1,7 @@
 import { User } from "next-auth";
-import { ThemeBtn } from "./btns/theme";
-import { UserBtn } from "./btns/user";
-import { SignInBtn } from "./btns/sign-in";
 import Link from "next/link";
-import { NewTil } from "./btns/new-til";
 import { GithubSvg } from "./ui/svgs";
-
+import { ThemeBtn, UserBtn, SignInBtn, NewTil } from "@/components/btns";
 export function Navbar({
   user,
   showAvatar,
@@ -19,7 +15,7 @@ export function Navbar({
         <h1 className={"font-medium text-5xl"}>til</h1>
       </Link>
       <div className=" flex items-center gap-4 ">
-        {user && <NewTil />}
+        <NewTil />
         <ThemeBtn />
         {!user && <GithubLink />}
         {showAvatar === false ? null : user ? (

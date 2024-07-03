@@ -12,7 +12,7 @@ br {
 }
 
 .mdxeditor-select-content {
-  @apply max-h-60 bg-popover text-popover-foreground;
+  @apply max-h-52 bg-popover border-x border-b border-editor border-2 text-popover-foreground shadow-md shadow-inherit;
 }
 
 ._codeMirrorWrapper_yms4a_391 {
@@ -30,6 +30,7 @@ br {
 ._selectTrigger_yms4a_307 {
   @apply dark:bg-editor;
 }
+
 ._iconButton_yms4a_456 {
   color: white !important;
 }
@@ -46,7 +47,7 @@ br {
 }
 
 .mdxeditor-source-editor .cm-editor {
-  @apply h-96 overflow-auto rounded-bl-md rounded-br-md shadow-md;
+  @apply h-72 lg:h-80 w-full overflow-auto rounded-bl-md rounded-br-md shadow-md;
 }
 
 .cm-matchingBracket {
@@ -63,32 +64,24 @@ button {
   cursor: pointer !important;
 }
 
-@layer components {
-  .scroll-container::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
+.scroll-container::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
 
-  .scroll-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.7);
-    border-radius: 20px;
-  }
-  @media (prefers-color-scheme: dark) {
-    .scroll-container::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.8);
-      border-radius: 20px;
-    }
-  }
-  .scroll-container::-webkit-scrollbar-track {
-    margin: 5px;
-  }
+.scroll-container::-webkit-scrollbar-thumb {
+  @apply rounded-3xl bg-black dark:bg-white/80;
+}
 
-  .scroll-container::-webkit-scrollbar-corner {
-    display: none;
-  }
-  .scroll-container::-webkit-scrollbar-button {
-    display: none;
-  }
+.scroll-container::-webkit-scrollbar-track {
+  margin: 5px;
+}
+
+.scroll-container::-webkit-scrollbar-corner {
+  display: none;
+}
+.scroll-container::-webkit-scrollbar-button {
+  display: none;
 }
 
 .cm-scroller::-webkit-scrollbar {

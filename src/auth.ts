@@ -2,8 +2,8 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Discord from "next-auth/providers/discord";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db } from "@/drizzle/db";
-import { User, accounts, users } from "./drizzle/schema";
+import { db } from "@/server/db";
+import { User, accounts, users } from "@/server/db/schema";
 import type { Provider } from "next-auth/providers";
 
 export const providers: Provider[] = [
@@ -39,3 +39,8 @@ export const providerMap = new Map(
     }
   })
 );
+
+export const checkAuth = async () => {
+  const session = await auth();
+  if (!session || !session.user.id) throw new Error("unauthenticated");
+};

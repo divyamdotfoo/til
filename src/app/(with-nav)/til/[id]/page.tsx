@@ -1,4 +1,4 @@
-import { getTil } from "@/actions";
+import { getTil } from "@/server/lib/til";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {

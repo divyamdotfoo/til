@@ -1,5 +1,5 @@
-import { auth, providerMap } from "@/auth";
-import { SignInDiscord, SignInGithub } from "@/components/btns/sign-in";
+import { auth } from "@/auth";
+import { SignInDiscord, SignInGithub } from "@/components/btns";
 import { redirect } from "next/navigation";
 
 export default async function Page() {

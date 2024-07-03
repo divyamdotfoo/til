@@ -1,5 +1,5 @@
-import { SignOutBtn } from "@/components/btns/sign-out";
-import { getUserProfile } from "@/actions";
+import { SignOutBtn } from "@/components/btns";
+import { getUserProfile } from "@/server/lib/user";
 import { notFound } from "next/navigation";
 
 export default async function Page({
@@ -8,12 +8,21 @@ export default async function Page({
   params: { username: string };
 }) {
   const { username } = params;
-  const user = await getUserProfile(username);
-  if (!user) notFound();
+  const userData = await getUserProfile(username);
+
+  if (!userData) notFound();
 
   return (
     <div>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+      <pre>{JSON.stringify(userData, null, 2)}</pre>
+      <p>
+        {JSON.stringify(
+          new Date(userData.author.createdAt).toLocaleString("en-US", {
+            month: "long",
+            year: "numeric",
+          })
+        )}
+      </p>
       <SignOutBtn />
     </div>
   );

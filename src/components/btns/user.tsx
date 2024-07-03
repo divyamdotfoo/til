@@ -1,12 +1,14 @@
 "use client";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { LogOut, Settings, User2 } from "lucide-react";
+import { BellDot, LogOut, Settings, User2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { User } from "next-auth";
 import { Separator } from "../ui/separator";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { signOut } from "next-auth/react";
+import { GithubSvg } from "../ui/svgs";
+import Link from "next/link";
 
 export function UserBtn({
   user,
@@ -27,36 +29,72 @@ export function UserBtn({
           </Avatar>
         </button>
       </PopoverTrigger>
-      <PopoverContent className=" p-0 w-52">
-        <button
-          className=" flex items-center gap-4 px-4 py-2 w-full font-medium opacity-90 hover:opacity-100 transition-all"
+      <PopoverContent className="w-52 bg-card rounded-lg mt-2 border-border/30 p-0 overflow-hidden">
+        <PopoverBtn
           onClick={() => {
             router.push(`/${user.username ?? user.id ?? ""}`);
             setOpen(false);
           }}
         >
-          <User2 className=" w-5 h-5" />
+          <User2 className=" w-4 h-4" />
           <span>Profile</span>
-        </button>
+        </PopoverBtn>
         <Separator />
-        <button
-          className=" flex items-center gap-4 px-4 py-2  w-full font-medium opacity-90 hover:opacity-100 transition-all"
-          onClick={() => {}}
-        >
-          <Settings className=" w-5 h-5" />
-          <span>Settings</span>
-        </button>
+        <Link href={"/notifications"}>
+          <PopoverBtn
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            <BellDot className=" w-4 h-4" />
+            <span>Notifications</span>
+          </PopoverBtn>
+        </Link>
         <Separator />
-        <button
-          className=" flex items-center gap-4 px-4 py-2  w-full font-medium opacity-90 hover:opacity-100 transition-all"
+        <PopoverBtn
           onClick={() => {
-            signOut({ callbackUrl: "/", redirect: true });
+            setOpen(false);
           }}
         >
-          <LogOut className=" w-5 h-5" />
+          <Settings className=" w-4 h-4" />
+          <span>Settings</span>
+        </PopoverBtn>
+        <Separator />
+        <PopoverBtn
+          onClick={() => {
+            signOut({ callbackUrl: "/", redirect: true });
+            setOpen(false);
+          }}
+        >
+          <LogOut className=" w-4 h-4" />
           <span>Log out</span>
-        </button>
+        </PopoverBtn>
+        <Separator />
+        <Link href={"https://github.com/divyamdotfoo"} target="_blank">
+          <PopoverBtn onClick={() => setOpen(false)}>
+            <div className=" w-4 h-4">
+              <GithubSvg classname=" fill-black dark:fill-white" />
+            </div>
+            <span>See on github</span>
+          </PopoverBtn>
+        </Link>
       </PopoverContent>
     </Popover>
   );
 }
+
+const PopoverBtn = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ onClick, children }) => {
+  return (
+    <button
+      className=" flex items-center gap-2 px-4 py-2  w-full font-medium transition-all bg-background hover:bg-accent text-sm"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+});
+
+PopoverBtn.displayName = "PopoverBtn";

@@ -8,7 +8,7 @@ import { Loader2, User2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { object, string } from "yup";
 import { useEffect, useState } from "react";
-import { isUserNameAvailable, updateUserProfile } from "@/actions";
+import { isUserNameAvailable, updateUserProfile } from "@/server/actions";
 import { useRouter } from "next/navigation";
 type NewUserData = { username: string | null } & Required<User>;
 

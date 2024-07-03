@@ -1,27 +1,28 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { Loader2, PencilIcon } from "lucide-react";
-import { motion } from "framer-motion";
+import { Loader2, LogIn } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { DiscordSvg, GithubSvg } from "../ui/svgs";
+import { signOut } from "next-auth/react";
+
 export function SignInBtn() {
   const [hover, setHover] = useState(false);
   const handler = async () => {
     signIn();
   };
   return (
-    <button
+    <Button
+      variant={"outline"}
       onClick={handler}
       onMouseMove={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className=" border-b border-dashed dark:border-primary flex items-center gap-1 text-xl font-medium tracking-tighter"
+      className=" flex items-center gap-2 text-xs font-bold rounded-3xl py-1 text-muted-foreground hover:text-primary"
+      size={"sm"}
     >
-      <motion.span className={`block ${hover ? " animate-drop-ball" : ""}`}>
-        <PencilIcon className=" w-4 h-[14px]" />
-      </motion.span>
-      <span>Write now</span>
-    </button>
+      <span>Log in</span>
+      <LogIn className=" w-[14px] h-[14px]" />
+    </Button>
   );
 }
 
@@ -64,5 +65,16 @@ export function SignInDiscord() {
         Continue with Discord
       </span>
     </Button>
+  );
+}
+
+export function SignOutBtn() {
+  const handler = async () => {
+    signOut({ redirect: true, callbackUrl: "/" });
+  };
+  return (
+    <button onClick={handler} className=" border p-2 rounded-md">
+      Sign out
+    </button>
   );
 }

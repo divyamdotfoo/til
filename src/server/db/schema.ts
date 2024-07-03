@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
@@ -65,23 +65,25 @@ export const users = sqliteTable("author", {
   bio: text("bio"),
   username: text("username"),
   upvotes: integer("upvotes").default(0),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => sql`(current_timestamp)`),
 });
-
-export type User = typeof users.$inferSelect;
 
 export const tils = sqliteTable("til", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => nanoid(12)),
   title: text("title").notNull(),
-  content: text("content"),
-  upvotes: integer("upvotes").default(0),
+  content: text("content", { mode: "json" }),
+  upvotes: integer("upvotes").notNull().default(0),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: text("created_at")
+    .notNull()
+    .$defaultFn(() => sql`(current_timestamp)`),
 });
-
-export type Til = typeof tils.$inferSelect;
 
 export const userRelations = relations(users, ({ many }) => ({
   tils: many(tils),
@@ -93,3 +95,9 @@ export const tilsRelations = relations(tils, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export type User = typeof users.$inferSelect;
+
+export type Til = typeof tils.$inferSelect;
+
+export type TilCardData = { author: User; til: Til };

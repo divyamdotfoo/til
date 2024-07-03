@@ -6,7 +6,8 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
-    --editor: 0% 0% 100%;
+    --editor: 0 0% 100%;
+    --til: 203 89% 53%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
@@ -28,12 +29,12 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 213 24% 7%;
     --foreground: 0 0% 98%;
     --editor: 220 6% 10%;
-    --card: 240 10% 3.9%;
+    --card: 222 15% 13%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 225 15% 11%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
@@ -69,5 +70,23 @@
   50% {
     transform: translateY(-25%);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+}
+
+@keyframes increment {
+  0% {
+    transform: translateY(8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes decrement {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-8px);
   }
 }

@@ -23,8 +23,8 @@ export const useLocalStorage = (
   const updateLocalMd = useCallback(
     (md: string) => {
       if (typeof window !== "undefined") {
-        localStorage.setItem(key, md);
         setLocalMd(md);
+        localStorage.setItem(key, md);
       }
     },
     [key]

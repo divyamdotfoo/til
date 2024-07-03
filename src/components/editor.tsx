@@ -1,9 +1,11 @@
 "use client";
+import { PostTil } from "@/components/btns";
 import { Quicksand } from "next/font/google";
 import { dracula } from "@uiw/codemirror-theme-dracula";
 import { langs } from "@uiw/codemirror-extensions-langs";
 import "@mdxeditor/editor/style.css";
 import "../app/editor.css";
+import { ErrorBoundary } from "react-error-boundary";
 import {
   MDXEditor,
   headingsPlugin,
@@ -28,9 +30,12 @@ import {
   DiffSourceToggleWrapper,
 } from "@mdxeditor/editor";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { useLocalStorage } from "@/lib/hooks";
+import { PostTilError } from "./btns/til";
+import { Dialog, DialogContent } from "./ui/dialog";
+import { useRouter } from "next/navigation";
 const quickSand = Quicksand({ subsets: ["latin"] });
 
 export function Editor() {
@@ -49,13 +54,13 @@ export function Editor() {
   }, [theme]);
 
   return (
-    <div className=" py-4 max-w-3xl mx-auto">
+    <div className="md:w-[720px] mx-auto flex flex-col items-center gap-4">
       <MDXEditor
         placeholder="What did you learned today?"
-        className={` bg-editor ${
+        className={` bg-editor w-full ${
           theme === "light"
-            ? "_light_1tncs_1 _light-theme_1tncs_1 shadow-md rounded-md"
-            : "_dark_1tncs_1 _dark-theme_1tncs_1 shadow-md rounded-md"
+            ? "_light_1tncs_1 _light-theme_1tncs_1 shadow-lg rounded-md"
+            : "_dark_1tncs_1 _dark-theme_1tncs_1 shadow-lg rounded-md"
         }
         `}
         ref={editorRef}
@@ -63,7 +68,7 @@ export function Editor() {
         onChange={(md) => {
           updateLocalMd(md);
         }}
-        contentEditableClassName={`prose dark:prose-invert prose-span md:h-96 overflow-auto scroll-container ${
+        contentEditableClassName={`prose dark:prose-invert prose-span h-72 lg:h-80 overflow-auto scroll-container ${
           quickSand.className
         } ${
           theme === "light"
@@ -73,6 +78,9 @@ export function Editor() {
         `}
         plugins={plugins()}
       />
+      <ErrorBoundary FallbackComponent={PostTilError}>
+        <PostTil md={localMd} />
+      </ErrorBoundary>
     </div>
   );
 }
@@ -120,6 +128,7 @@ const plugins = () => [
 const supportedLangs = () => ({
   js: "JavaScript",
   ts: "TypeScript",
+  jsx: "JSX",
   python: "Python",
   java: "Java",
   c: "C",
@@ -144,3 +153,22 @@ const supportedLangs = () => ({
   dockerfile: "Dockerfile",
   graphql: "GraphQL",
 });
+
+export function ModalWrappedEditor() {
+  const [open, setOpen] = useState(true);
+  const router = useRouter();
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(open) => {
+        setOpen(!open);
+        router.back();
+      }}
+    >
+      <DialogContent className=" max-w-fit border-none outline-none shadow-none bg-transparent p-0 m-0 z-0">
+        <Editor />
+      </DialogContent>
+    </Dialog>
+  );
+}
