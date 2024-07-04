@@ -43,4 +43,5 @@ export const providerMap = new Map(
 export const checkAuth = async () => {
   const session = await auth();
   if (!session || !session.user.id) throw new Error("unauthenticated");
+  return session.user.id;
 };

@@ -96,8 +96,22 @@ export const tilsRelations = relations(tils, ({ one }) => ({
   }),
 }));
 
+export const upvotes = sqliteTable(
+  "upvote",
+  {
+    userId: text("userId").notNull(),
+    tilId: text("tilId").notNull(),
+  },
+  (upvote) => ({
+    pk: primaryKey({ name: "id", columns: [upvote.tilId, upvote.userId] }),
+  })
+);
+
 export type User = typeof users.$inferSelect;
 
 export type Til = typeof tils.$inferSelect;
 
-export type TilCardData = { author: User; til: Til };
+export type TilCardData = Til &
+  Pick<User, "image" | "username" | "name"> & { isLiked: unknown };
+
+export type TilPageData = Til & { user: User };

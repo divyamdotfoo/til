@@ -9,6 +9,7 @@ import { useState } from "react";
 import { addTil } from "@/server/actions";
 import { FallbackProps, useErrorBoundary } from "react-error-boundary";
 import { Label } from "@radix-ui/react-label";
+import { flushSync } from "react-dom";
 export function NewTil() {
   return (
     <button className=" cursor-pointer">
@@ -24,7 +25,7 @@ export function PostTil({ md }: { md: string }) {
   const { showBoundary } = useErrorBoundary();
   const router = useRouter();
   const session = useSession();
-  const maxChar = 700;
+  const maxChar = 1400;
   const count = getMdLength(md);
   const handleClick = async () => {
     if (session.status === "unauthenticated" && !session.data) {
@@ -140,30 +141,47 @@ export const PostTilError = (props: FallbackProps) => {
   );
 };
 
-export const UpvoteTil = ({ id, upVotes }: { id: string; upVotes: number }) => {
-  const [isVoted, setVoted] = useState<boolean | null>(null);
+export const UpvoteTil = ({
+  id,
+  upVotes,
+  isVote,
+  classname,
+}: {
+  id: string;
+  upVotes: number;
+  isVote: boolean;
+  classname?: string;
+}) => {
+  const [isVoted, setVoted] = useState(isVote);
+  const [votes, setUpvotes] = useState(upVotes);
   const session = useSession();
   const handler = () => {
     // if (session.status === "unauthenticated" || !session.data) {
     //   signIn();
     //   return;
     // }
-    setVoted((p) => !p);
+    // if (isVoted) {
+    //   return;
+    // }
+    flushSync(() => {
+      setVoted(true);
+      setUpvotes(upVotes + 1);
+    });
     // upvote(id);
   };
   return (
     <button
       onClick={handler}
-      className=" flex items-start gap-2 hover:text-green-600 dark:hover:text-green-400 transition-all"
+      className={`flex items-center hover:text-green-600 dark:hover:text-green-400 transition-all`}
     >
-      <span className="hover:bg-green-100 dark:hover:bg-[#1ddc6f3d] p-1 rounded-md">
+      <span className="hover:bg-green-100 dark:hover:bg-[#1ddc6f3d] p-1 rounded-md transition-all">
         {isVoted ? (
           <svg
             width="1em"
             height="1em"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-6 h-6 pointer-events-none animate-in"
+            className="w-5 h-5 pointer-events-none animate-in"
           >
             <path
               d="M13.234 3.395c.191.136.358.303.494.493l7.077 9.285a1.06 1.06 0 01-1.167 1.633l-4.277-1.284a1.06 1.06 0 00-1.355.866l-.814 5.701a1.06 1.06 0 01-1.05.911h-.281a1.06 1.06 0 01-1.05-.91l-.815-5.702a1.06 1.06 0 00-1.355-.866l-4.276 1.284a1.06 1.06 0 01-1.167-1.633l7.077-9.285a2.121 2.121 0 012.96-.493z"
@@ -175,7 +193,7 @@ export const UpvoteTil = ({ id, upVotes }: { id: string; upVotes: number }) => {
           <svg
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            className="w-6 h-6 pointer-events-none"
+            className="w-5 h-5 pointer-events-none"
           >
             <path
               d="M9.456 4.216l-5.985 7.851c-.456.637-.583 1.402-.371 2.108l.052.155a2.384 2.384 0 002.916 1.443l2.876-.864.578 4.042a2.384 2.384 0 002.36 2.047h.234l.161-.006a2.384 2.384 0 002.2-2.041l.576-4.042 2.877.864a2.384 2.384 0 002.625-3.668L14.63 4.33a3.268 3.268 0 00-5.174-.115zm3.57.613c.16.114.298.253.411.411l5.897 7.736a.884.884 0 01-.973 1.36l-3.563-1.069a.884.884 0 00-1.129.722l-.678 4.75a.884.884 0 01-.875.759h-.234a.884.884 0 01-.875-.76l-.679-4.75a.884.884 0 00-1.128-.72l-3.563 1.068a.884.884 0 01-.973-1.36L10.56 5.24a1.767 1.767 0 012.465-.41z"
@@ -186,7 +204,7 @@ export const UpvoteTil = ({ id, upVotes }: { id: string; upVotes: number }) => {
         )}
       </span>
       <p
-        className={`font-semibold text-lg flex flex-col h-6 translate-y-[1px] overflow-hidden ${
+        className={`font-semibold flex flex-col overflow-hidden h-8 ${
           isVoted
             ? "opacity-100 dark:text-green-400 text-green-600"
             : "opacity-80"
@@ -194,22 +212,18 @@ export const UpvoteTil = ({ id, upVotes }: { id: string; upVotes: number }) => {
       >
         <span
           className={`${
-            isVoted === true
-              ? " -translate-y-7 transition-all"
-              : isVoted === false
-              ? "translate-y-0 transition-all"
-              : ""
+            votes === upVotes
+              ? " translate-y-[2px] transition-all"
+              : "-translate-y-6 transition-all"
           }`}
         >
           {upVotes}
         </span>
         <span
           className={`${
-            isVoted === true
-              ? "-translate-y-7 transition-all"
-              : isVoted === false
-              ? "translate-y-0 transition-all"
-              : ""
+            votes === upVotes
+              ? " translate-y-2 transition-all"
+              : "-translate-y-5 transition-all"
           }`}
         >
           {upVotes + 1}
