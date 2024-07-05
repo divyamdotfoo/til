@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import { doesContainHeading, getMdLength } from "@/lib/utils";
-import { useState } from "react";
-import { addTil } from "@/server/actions";
+import { useEffect, useState } from "react";
+import { addTil, upvote } from "@/server/actions";
 import { FallbackProps, useErrorBoundary } from "react-error-boundary";
 import { Label } from "@radix-ui/react-label";
 import { flushSync } from "react-dom";
@@ -154,20 +154,25 @@ export const UpvoteTil = ({
 }) => {
   const [isVoted, setVoted] = useState(isVote);
   const [votes, setUpvotes] = useState(upVotes);
+  useEffect(() => {
+    console.log(id, isVoted, votes, upVotes);
+  }, [isVoted, votes, upVotes]);
   const session = useSession();
-  const handler = () => {
-    // if (session.status === "unauthenticated" || !session.data) {
-    //   signIn();
-    //   return;
-    // }
-    // if (isVoted) {
-    //   return;
-    // }
+  const router = useRouter();
+  const handler = async () => {
+    if (session.status === "unauthenticated" || !session.data) {
+      signIn();
+      return;
+    }
+    if (isVoted) {
+      return;
+    }
     flushSync(() => {
       setVoted(true);
       setUpvotes(upVotes + 1);
     });
-    // upvote(id);
+    await upvote(id);
+    router.refresh();
   };
   return (
     <button
@@ -212,21 +217,21 @@ export const UpvoteTil = ({
       >
         <span
           className={`${
-            votes === upVotes
-              ? " translate-y-[2px] transition-all"
+            !isVoted
+              ? " translate-y-1 transition-all"
               : "-translate-y-6 transition-all"
           }`}
         >
-          {upVotes}
+          {votes}
         </span>
         <span
           className={`${
-            votes === upVotes
+            !isVoted
               ? " translate-y-2 transition-all"
               : "-translate-y-5 transition-all"
           }`}
         >
-          {upVotes + 1}
+          {votes}
         </span>
       </p>
     </button>

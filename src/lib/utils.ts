@@ -56,3 +56,9 @@ export const getTimeSincePosted = (dt: string) => {
     return `${minutes} min${minutes > 1 ? "s" : ""} ago`;
   }
 };
+
+export const getDateForJoined = (dt: string) =>
+  new Date(dt).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });

@@ -1,16 +1,59 @@
 import { auth, checkAuth } from "@/auth";
 import { db } from "../db";
-import { Til, TilCardData, tils, upvotes, users } from "../db/schema";
+import {
+  Til,
+  TilCardData,
+  TilPageData,
+  tils,
+  upvotes,
+  users,
+} from "../db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
-export const getTil = async (id: string) => {
-  return db.query.tils.findFirst({
-    where: (tils, { eq }) => eq(tils.id, id),
-    with: {
-      user: true,
-    },
-  });
+export const getTil = async (
+  id: string,
+  authId: string | null | undefined
+): Promise<TilPageData[]> => {
+  if (!authId)
+    return db
+      .select({
+        id: tils.id,
+        title: tils.title,
+        userId: tils.userId,
+        upvotes: tils.upvotes,
+        createdAt: tils.createdAt,
+        content: tils.content,
+
+        name: users.name,
+        username: users.username,
+        image: users.image,
+
+        isLiked: sql`false`.as("isLiked"),
+      })
+      .from(tils)
+      .where(eq(tils.id, id))
+      .innerJoin(users, eq(tils.userId, users.id));
+
+  return db
+    .select({
+      id: tils.id,
+      title: tils.title,
+      userId: tils.userId,
+      upvotes: tils.upvotes,
+      createdAt: tils.createdAt,
+      content: tils.content,
+
+      name: users.name,
+      username: users.username,
+      image: users.image,
+
+      isLiked: sql`upvote.userId IS NOT NULL`.as("isLiked"),
+    })
+    .from(tils)
+    .where(eq(tils.id, id))
+    .innerJoin(users, eq(tils.userId, users.id))
+    .leftJoin(upvotes, and(eq(upvotes.userId, authId), eq(upvotes.tilId, id)));
 };
 
 export const addTil = async (til: Pick<Required<Til>, "title" | "content">) => {
@@ -25,7 +68,7 @@ export const addTil = async (til: Pick<Required<Til>, "title" | "content">) => {
       id: nanoid(12),
     })
     .returning();
-
+  incrementVote(createdTil[0].id);
   return createdTil[0];
 };
 
@@ -64,11 +107,10 @@ export const getAllTil = async (
         userId: tils.userId,
         username: users.username,
         title: tils.title,
-        content: tils.content,
         createdAt: tils.createdAt,
         image: users.image,
         name: users.name,
-        isLiked: sql.raw("false").as("isLiked"),
+        isLiked: sql`false`.as("isLiked"),
       })
       .from(tils)
       .innerJoin(users, eq(tils.userId, users.id));
@@ -80,11 +122,10 @@ export const getAllTil = async (
         userId: tils.userId,
         username: users.username,
         title: tils.title,
-        content: tils.content,
         createdAt: tils.createdAt,
         image: users.image,
         name: users.name,
-        isLiked: sql.raw("upvote.userId IS NOT NULL").as("isLiked"),
+        isLiked: sql`upvote.userId IS NOT NULL`.as("isLiked"),
       })
       .from(tils)
       .innerJoin(users, eq(tils.userId, users.id))

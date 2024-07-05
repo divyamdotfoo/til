@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "./globals.css";
+import "./prismSyntax.css";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/providers";
 const quickSand = Quicksand({ subsets: ["latin"] });

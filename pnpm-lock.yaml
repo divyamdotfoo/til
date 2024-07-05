@@ -17,6 +17,9 @@ importers:
       '@mdxeditor/editor':
         specifier: ^3.6.1
         version: 3.6.1(@codemirror/language@6.10.2)(@lezer/common@1.2.1)(@lezer/highlight@1.2.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(yjs@13.6.18)
+      '@next/mdx':
+        specifier: ^14.2.4
+        version: 14.2.4(@mdx-js/react@3.0.1(@types/react@18.3.3)(react@18.3.1))
       '@radix-ui/react-avatar':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -89,6 +92,9 @@ importers:
       react-error-boundary:
         specifier: ^4.0.13
         version: 4.0.13(react@18.3.1)
+      rehype-prism-plus:
+        specifier: ^2.0.0
+        version: 2.0.0
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
@@ -832,6 +838,17 @@ packages:
 
   '@next/eslint-plugin-next@14.2.4':
     resolution: {integrity: sha512-svSFxW9f3xDaZA3idQmlFw7SusOuWTpDTAeBlO3AEPDltrraV+lqs7mAc6A27YdnpQVVIA3sODqUAAHdWhVWsA==}
+
+  '@next/mdx@14.2.4':
+    resolution: {integrity: sha512-eklTNNoH08xGy9UiKcohZmoLhmHAYaYm5ndPGQqJybaeNErgYL8fmp2tk5DRD0L54DNqMz97oN+CAEHqfqIVcw==}
+    peerDependencies:
+      '@mdx-js/loader': '>=0.15.0'
+      '@mdx-js/react': '>=0.15.0'
+    peerDependenciesMeta:
+      '@mdx-js/loader':
+        optional: true
+      '@mdx-js/react':
+        optional: true
 
   '@next/swc-darwin-arm64@14.2.4':
     resolution: {integrity: sha512-AH3mO4JlFUqsYcwFUHb1wAKlebHU/Hv2u2kb1pAuRanDZ7pD/A/KPD98RHZmwsJpdHQwfEc/06mgpSzwrJYnNg==}
@@ -4823,6 +4840,12 @@ snapshots:
   '@next/eslint-plugin-next@14.2.4':
     dependencies:
       glob: 10.3.10
+
+  '@next/mdx@14.2.4(@mdx-js/react@3.0.1(@types/react@18.3.3)(react@18.3.1))':
+    dependencies:
+      source-map: 0.7.4
+    optionalDependencies:
+      '@mdx-js/react': 3.0.1(@types/react@18.3.3)(react@18.3.1)
 
   '@next/swc-darwin-arm64@14.2.4':
     optional: true

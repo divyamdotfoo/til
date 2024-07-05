@@ -111,7 +111,8 @@ export type User = typeof users.$inferSelect;
 
 export type Til = typeof tils.$inferSelect;
 
-export type TilCardData = Til &
+export type TilCardData = Omit<Til, "content"> &
   Pick<User, "image" | "username" | "name"> & { isLiked: unknown };
 
-export type TilPageData = Til & { user: User };
+export type TilPageData = Til &
+  Pick<User, "username" | "name" | "image"> & { isLiked: unknown };

@@ -16,13 +16,15 @@ export function TilCard({ tilCardData }: { tilCardData: TilCardData }) {
           upVotes={tilCardData.upvotes}
           isVote={isLikedByUser}
         />
-        <Link href={`/til/${tilCardData.id}`} prefetch>
-          <p className="font-semibold text-wrap tracking-tight hover:underline transition-all">
-            {tilCardData.title}
-          </p>
+        <Link
+          href={`/til/${tilCardData.id}`}
+          prefetch
+          className="font-semibold text-wrap tracking-tight hover:underline transition-all pr-4"
+        >
+          {tilCardData.title}
         </Link>
       </div>
-      <div className=" flex items-center justify-between">
+      <div className=" flex items-center justify-between shrink-0">
         <TilUserInfo
           data={{
             createdAt: tilCardData.createdAt,
@@ -49,7 +51,7 @@ export function TilUserInfo({
 }) {
   return (
     <div className={`flex items-center gap-2 ${classname}`}>
-      <Avatar className=" w-6 h-6 border-2 border-border shadow-sm">
+      <Avatar className=" w-5 h-5 border-2 border-border shadow-sm">
         <AvatarFallback>
           {data.username ? data.username[0].toUpperCase() : ""}
         </AvatarFallback>
@@ -57,14 +59,20 @@ export function TilUserInfo({
       </Avatar>
       <Link
         href={`/${data.username ?? data.userId}`}
-        className=" hover:underline font-medium opacity-90 hover:opacity-100 transition-all"
+        className=" hover:underline font-medium opacity-90 hover:opacity-100 transition-all text-sm"
       >
         {data.username ?? data.name}
       </Link>
       <Separator orientation="vertical" className=" h-5" />
-      <p className=" text-sm font-medium opacity-90">
-        {getTimeSincePosted(data.createdAt)}
-      </p>
+      <TimeSincePosted dt={data.createdAt} />
     </div>
+  );
+}
+
+export function TimeSincePosted({ dt }: { dt: string }) {
+  return (
+    <p className=" text-xs font-medium opacity-90 min-w-16">
+      {getTimeSincePosted(dt)}
+    </p>
   );
 }
