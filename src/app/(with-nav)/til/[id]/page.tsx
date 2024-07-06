@@ -1,13 +1,14 @@
-import { getTil } from "@/server/lib/til";
+import { getMetaDataForTil, getTil } from "@/server/lib/til";
 import { notFound } from "next/navigation";
 import { TilUserInfo } from "@/components/til-card";
 import { Separator } from "@/components/ui/separator";
-import { UpvoteTil } from "@/components/btns/til";
+import { UpvoteTil } from "@/components/btns";
 import rehypePrismPlus from "rehype-prism-plus";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { removeHeading } from "@/lib/utils";
+import { getTimeSincePosted, removeHeading } from "@/lib/utils";
 import { auth } from "@/auth";
 
+import { Metadata } from "next";
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params;
   const session = await auth();
@@ -51,4 +52,39 @@ export default async function Page({ params }: { params: { id: string } }) {
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const tilId = params.id;
+  const tilData = await getMetaDataForTil(tilId);
+  if (!tilData) return {};
+
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+      : "http://localhost:3000";
+
+  const url = new URL(`${baseUrl}/api/og`);
+
+  const searchParams = new URLSearchParams({
+    title: tilData.title,
+    createdAt: getTimeSincePosted(tilData.createdAt),
+  });
+
+  if (tilData.user.image) searchParams.append("avatar", tilData.user.image);
+  if (tilData.user.username)
+    searchParams.append("username", tilData.user.username);
+
+  url.search = searchParams.toString();
+
+  return {
+    title: tilData.title,
+    openGraph: {
+      images: [url.toString()],
+    },
+  };
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import "./prismSyntax.css";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/providers";
+import { Toaster } from "@/components/ui/toaster";
 const quickSand = Quicksand({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default async function RootLayout({
             attribute="class"
           >
             {children}
+            <Toaster />
           </ThemeProvider>
         </SessionProvider>
       </body>

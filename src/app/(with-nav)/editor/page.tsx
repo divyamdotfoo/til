@@ -4,5 +4,9 @@ const Editor = dynamic(
   { ssr: false }
 );
 export default function Page() {
-  return <Editor />;
+  return (
+    <div className=" py-2">
+      <Editor />
+    </div>
+  );
 }

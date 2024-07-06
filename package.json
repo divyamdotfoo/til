@@ -21,10 +21,13 @@
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
     "@uiw/codemirror-extensions-langs": "^4.22.2",
     "@uiw/codemirror-theme-dracula": "^4.22.2",
     "@uiw/codemirror-theme-github": "^4.22.2",
     "@uiw/react-markdown-editor": "^6.1.2",
+    "@uploadthing/react": "^6.7.2",
+    "@vercel/og": "^0.6.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.31.2",
@@ -42,6 +45,7 @@
     "rehype-prism-plus": "^2.0.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "uploadthing": "^6.13.2",
     "yup": "^1.4.0"
   },
   "devDependencies": {

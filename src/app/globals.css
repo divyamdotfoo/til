@@ -31,7 +31,8 @@
   .dark {
     --background: 213 24% 7%;
     --foreground: 0 0% 98%;
-    --editor: 220 6% 10%;
+    /* --editor: 220 6% 10%; */
+    --editor: 213 24% 7%;
     --card: 222 15% 13%;
     --card-foreground: 0 0% 98%;
     --popover: 225 15% 11%;

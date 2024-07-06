@@ -19,12 +19,12 @@ br {
   @apply border-none p-0;
 }
 
-._codeMirrorWrapper_yms4a_391 .cm-editor {
-  @apply rounded-md;
-}
-
 ._codeMirrorToolbar_yms4a_408 {
   @apply bg-transparent;
+}
+
+._toolbarRoot_yms4a_160 {
+  @apply rounded-t-md rounded-b-none;
 }
 
 ._selectTrigger_yms4a_307 {
@@ -38,16 +38,17 @@ br {
   opacity: 0.8;
   transition: all;
 }
-.mdxeditor .cm-editor {
-  @apply p-2;
-}
 
 .mdxeditor .cm-gutters {
   @apply hidden;
 }
 
-.mdxeditor-source-editor .cm-editor {
-  @apply h-72 lg:h-80 w-full overflow-auto rounded-bl-md rounded-br-md shadow-md;
+._codeMirrorWrapper_yms4a_391 .cm-editor {
+  @apply px-2 pt-8 pb-4;
+}
+
+.cm-sourceView .cm-editor {
+  @apply h-72 lg:h-96 pb-10 w-full overflow-auto rounded-bl-md rounded-br-md shadow-md;
 }
 
 .cm-matchingBracket {

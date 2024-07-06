@@ -1,4 +1,4 @@
-import { UpvoteTil } from "@/components/btns/til";
+import { UpvoteTil } from "@/components/btns";
 import { TimeSincePosted } from "@/components/til-card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UpvoteIconSolid } from "@/components/ui/svgs";

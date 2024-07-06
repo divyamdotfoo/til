@@ -135,3 +135,18 @@ export const getAllTil = async (
       );
   }
 };
+
+export const getMetaDataForTil = (id: string) => {
+  return db.query.tils.findFirst({
+    where: (tils, { eq }) => eq(tils.id, id),
+    columns: {
+      title: true,
+      createdAt: true,
+    },
+    with: {
+      user: {
+        columns: { username: true, image: true },
+      },
+    },
+  });
+};

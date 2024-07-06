@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "../ui/button";
 import { doesContainHeading, getMdLength } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { addTil, upvote } from "@/server/actions";
 import { FallbackProps, useErrorBoundary } from "react-error-boundary";
 import { Label } from "@radix-ui/react-label";
 import { flushSync } from "react-dom";
+import { useToast } from "../ui/use-toast";
 export function NewTil() {
   return (
     <button className=" cursor-pointer">
@@ -20,12 +21,19 @@ export function NewTil() {
   );
 }
 
-export function PostTil({ md }: { md: string }) {
+export function PostTil({
+  md,
+  children,
+}: {
+  md: string;
+  children?: React.ReactNode;
+}) {
   const [loading, setLoading] = useState(false);
   const { showBoundary } = useErrorBoundary();
+  const { toast } = useToast();
   const router = useRouter();
   const session = useSession();
-  const maxChar = 1400;
+  const maxChar = 1500;
   const count = getMdLength(md);
   const handleClick = async () => {
     if (session.status === "unauthenticated" && !session.data) {
@@ -33,8 +41,12 @@ export function PostTil({ md }: { md: string }) {
       return;
     }
     const title = doesContainHeading(md);
-    if (!title) {
-      alert("true");
+    if (!title || !title.trim().length) {
+      toast({
+        title: "Title cannot be empty",
+        description: "Your til should start with a heading.",
+        variant: "destructive",
+      });
       return;
     }
     setLoading(true);
@@ -56,11 +68,19 @@ export function PostTil({ md }: { md: string }) {
       className=" px-4 flex items-center gap-1 rounded-sm bg-black dark:bg-primary hover:scale-[1.02] transition-all "
       size={"sm"}
     >
-      <span className="font-semibold text-base">Post Til</span>
-      {loading ? (
-        <Loader2 className=" w-5 h-5 animate-spin" />
+      {children ? (
+        children
       ) : (
-        <CircularProgress maxChar={maxChar} count={count} />
+        <>
+          <span className="font-semibold text-base">Post Til</span>
+          <span>
+            {loading ? (
+              <Loader2 className=" w-5 h-5 animate-spin" />
+            ) : (
+              <CircularProgress maxChar={maxChar} count={count} />
+            )}
+          </span>
+        </>
       )}
     </Button>
   );
@@ -154,9 +174,6 @@ export const UpvoteTil = ({
 }) => {
   const [isVoted, setVoted] = useState(isVote);
   const [votes, setUpvotes] = useState(upVotes);
-  useEffect(() => {
-    console.log(id, isVoted, votes, upVotes);
-  }, [isVoted, votes, upVotes]);
   const session = useSession();
   const router = useRouter();
   const handler = async () => {

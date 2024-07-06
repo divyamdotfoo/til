@@ -6,6 +6,7 @@ import { langs } from "@uiw/codemirror-extensions-langs";
 import "@mdxeditor/editor/style.css";
 import "../app/editor.css";
 import { ErrorBoundary } from "react-error-boundary";
+
 import {
   MDXEditor,
   headingsPlugin,
@@ -19,15 +20,16 @@ import {
   codeMirrorPlugin,
   markdownShortcutPlugin,
   BoldItalicUnderlineToggles,
-  CreateLink,
   StrikeThroughSupSubToggles,
-  InsertImage,
   Separator,
   ListsToggle,
   BlockTypeSelect,
   InsertCodeBlock,
   diffSourcePlugin,
   DiffSourceToggleWrapper,
+  linkDialogPlugin,
+  imagePlugin,
+  ButtonWithTooltip,
 } from "@mdxeditor/editor";
 
 import { useEffect, useRef, useState } from "react";
@@ -36,12 +38,25 @@ import { useLocalStorage } from "@/lib/hooks";
 import { PostTilError } from "./btns/til";
 import { Dialog, DialogContent } from "./ui/dialog";
 import { useRouter } from "next/navigation";
+import { generateReactHelpers } from "@uploadthing/react";
+
 const quickSand = Quicksand({ subsets: ["latin"] });
+
+import { OurFileRouter } from "@/app/api/uploadthing/core";
+import { UploadImageSvg } from "./ui/svgs";
+export const { useUploadThing } = generateReactHelpers<OurFileRouter>();
 
 export function Editor() {
   const editorRef = useRef<MDXEditorMethods>(null);
   const { theme } = useTheme();
   const { localMd, updateLocalMd } = useLocalStorage("til-md", editorRef);
+  const { startUpload, isUploading } = useUploadThing("imageUploader", {});
+
+  async function imageUploadHandler(img: File) {
+    const res = await startUpload([img]);
+    if (!res) return "";
+    return res[0].url;
+  }
 
   useEffect(() => {
     if (editorRef.current) {
@@ -68,7 +83,7 @@ export function Editor() {
         onChange={(md) => {
           updateLocalMd(md);
         }}
-        contentEditableClassName={`prose dark:prose-invert prose-span h-72 lg:h-80 overflow-auto scroll-container ${
+        contentEditableClassName={`prose border-2 dark:border border-border rounded-b-md pb-8 prose-lg prose-span h-72 lg:h-96 overflow-auto scroll-container ${
           quickSand.className
         } ${
           theme === "light"
@@ -76,10 +91,12 @@ export function Editor() {
             : "_dark_1tncs_1 _dark-theme_1tncs_1"
         }
         `}
-        plugins={plugins()}
+        plugins={[...plugins(), imagePlugin({ imageUploadHandler })]}
       />
       <ErrorBoundary FallbackComponent={PostTilError}>
-        <PostTil md={localMd} />
+        <PostTil md={localMd}>
+          {isUploading ? <span>Uploading ...</span> : null}
+        </PostTil>
       </ErrorBoundary>
     </div>
   );
@@ -96,9 +113,7 @@ function ToolBarContents() {
       <Separator />
       <BlockTypeSelect />
       <Separator />
-      <CreateLink />
-      <InsertImage />
-      <Separator />
+      <UploadImageBtn />
       <InsertCodeBlock />
     </DiffSourceToggleWrapper>
   );
@@ -112,6 +127,8 @@ const plugins = () => [
   codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
   thematicBreakPlugin(),
   markdownShortcutPlugin(),
+  linkDialogPlugin(),
+
   diffSourcePlugin({
     viewMode: "rich-text",
     codeMirrorExtensions: [dracula, langs.markdown()],
@@ -170,5 +187,13 @@ export function ModalWrappedEditor() {
         <Editor />
       </DialogContent>
     </Dialog>
+  );
+}
+
+function UploadImageBtn() {
+  return (
+    <ButtonWithTooltip title="Drop image inside editor">
+      <UploadImageSvg />
+    </ButtonWithTooltip>
   );
 }
