@@ -9,12 +9,13 @@ import { getTimeSincePosted } from "@/lib/utils";
 export function TilCard({ tilCardData }: { tilCardData: TilCardData }) {
   const isLikedByUser = Boolean(tilCardData.isLiked);
   return (
-    <div className="px-4 flex items-center justify-between py-2 rounded-sm border-border transition-all border bg-card shadow-md">
+    <div className="px-4 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0 py-2 transition-all bg-card/50 shadow-md">
       <div className=" flex items-center gap-4">
         <UpvoteTil
           id={tilCardData.id}
           upVotes={tilCardData.upvotes}
           isVote={isLikedByUser}
+          classname="hidden md:flex"
         />
         <Link
           href={`/til/${tilCardData.id}`}
@@ -24,7 +25,13 @@ export function TilCard({ tilCardData }: { tilCardData: TilCardData }) {
           {tilCardData.title}
         </Link>
       </div>
-      <div className=" flex items-center justify-between shrink-0">
+      <div className=" flex items-center justify-between shrink-0 w-full md:w-auto">
+        <UpvoteTil
+          id={tilCardData.id}
+          upVotes={tilCardData.upvotes}
+          isVote={isLikedByUser}
+          classname="md:hidden"
+        />
         <TilUserInfo
           data={{
             createdAt: tilCardData.createdAt,

@@ -39,16 +39,16 @@ br {
   transition: all;
 }
 
-.mdxeditor .cm-gutters {
+.mdxeditor-rich-text-editor .cm-editor {
+  @apply px-2 pt-8 pb-4 prose-sm;
+}
+
+.mdxeditor-rich-text-editor .cm-gutters {
   @apply hidden;
 }
 
-._codeMirrorWrapper_yms4a_391 .cm-editor {
-  @apply px-2 pt-8 pb-4;
-}
-
 .cm-sourceView .cm-editor {
-  @apply h-72 lg:h-96 pb-10 w-full overflow-auto rounded-bl-md rounded-br-md shadow-md;
+  @apply h-72 lg:h-96 pb-10 pr-2 w-full overflow-auto rounded-bl-md rounded-br-md shadow-md;
 }
 
 .cm-matchingBracket {
@@ -103,4 +103,8 @@ button {
 }
 .cm-scroller::-webkit-scrollbar-button {
   display: none;
+}
+
+.mdxeditor-popup-container [role="dialog"] {
+  @apply bg-popover;
 }

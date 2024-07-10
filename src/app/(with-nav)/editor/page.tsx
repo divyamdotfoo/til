@@ -5,7 +5,7 @@ const Editor = dynamic(
 );
 export default function Page() {
   return (
-    <div className=" py-2">
+    <div className="pt-2">
       <Editor />
     </div>
   );

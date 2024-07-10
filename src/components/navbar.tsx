@@ -1,6 +1,6 @@
 import { User } from "next-auth";
 import Link from "next/link";
-import { GithubSvg } from "./ui/svgs";
+import { GithubSvg, LOGO } from "./ui/svgs";
 import { ThemeBtn, UserBtn, SignInBtn, NewTil } from "@/components/btns";
 export function Navbar({
   user,
@@ -10,9 +10,9 @@ export function Navbar({
   showAvatar?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between py-2 w-full">
+    <div className="flex items-center justify-between py-4 w-full">
       <Link href={"/"} className=" cursor-pointer">
-        <h1 className={"font-medium text-5xl"}>til</h1>
+        <LOGO />
       </Link>
       <div className=" flex items-center gap-4 ">
         <NewTil />

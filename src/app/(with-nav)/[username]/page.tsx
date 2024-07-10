@@ -17,9 +17,9 @@ export default async function Page({
   if (!userData) notFound();
 
   return (
-    <div className=" max-w-4xl mx-auto">
+    <div className=" max-w-4xl mx-auto py-3">
       <div className="w-full grid md:grid-cols-4 grid-cols-1">
-        <div className=" md:col-start-1 md:col-end-2">
+        <div className=" md:col-start-1 md:col-end-2 md:h-screen md:sticky md:top-4 md:overflow-auto ">
           <div className=" flex  xs:items-center items-start gap-4 md:block">
             <Avatar className=" lg:w-52 lg:h-52 md:w-44 md:h-44 sm:w-28 sm:h-28 xs:h-24 xs:w-24 w-16 h-16 mb-4 border-2 border-border dark:border-white/40 shadow-md">
               <AvatarFallback className=" flex items-center justify-center">

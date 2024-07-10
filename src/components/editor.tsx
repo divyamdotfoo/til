@@ -59,6 +59,12 @@ export function Editor() {
   }
 
   useEffect(() => {
+    if (document) {
+      const editor = document.querySelector(
+        ".mdxeditor-root-contenteditable [aria-label='editable markdown']"
+      );
+      if (editor) editor.setAttribute("spellcheck", "false");
+    }
     if (editorRef.current) {
       setTimeout(() => {
         if (editorRef.current) {
@@ -69,7 +75,7 @@ export function Editor() {
   }, [theme]);
 
   return (
-    <div className="md:w-[720px] mx-auto flex flex-col items-center gap-4">
+    <div className="md:w-[720px] 2xl:w-[950px] w-auto mx-auto flex flex-col items-center gap-8 md:gap-4 ">
       <MDXEditor
         placeholder="What did you learned today?"
         className={` bg-editor w-full ${
@@ -83,7 +89,7 @@ export function Editor() {
         onChange={(md) => {
           updateLocalMd(md);
         }}
-        contentEditableClassName={`prose border-2 dark:border border-border rounded-b-md pb-8 prose-lg prose-span h-72 lg:h-96 overflow-auto scroll-container ${
+        contentEditableClassName={`prose border-2 dark:border border-t-0 border-border rounded-b-md pb-8 prose-lg prose-span h-[calc(100vh-250px)] sm:h-72 lg:h-96 overflow-auto scroll-container ${
           quickSand.className
         } ${
           theme === "light"

@@ -8,6 +8,7 @@
 
 # testing
 /coverage
+/src/app/api/test
 
 # next.js
 /.next/
@@ -37,3 +38,5 @@ next-env.d.ts
 
 #drizzle
 /src/drizzle/migrations/
+
+

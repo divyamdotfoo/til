@@ -194,7 +194,7 @@ export const UpvoteTil = ({
   return (
     <button
       onClick={handler}
-      className={`flex items-center hover:text-green-600 dark:hover:text-green-400 transition-all`}
+      className={`flex items-center hover:text-green-600 dark:hover:text-green-400 transition-all ${classname}`}
     >
       <span className="hover:bg-green-100 dark:hover:bg-[#1ddc6f3d] p-1 rounded-md transition-all">
         {isVoted ? (
