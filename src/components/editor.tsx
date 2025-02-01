@@ -187,6 +187,7 @@ export function ModalWrappedEditor() {
       onOpenChange={(open) => {
         setOpen(!open);
         router.back();
+        router.refresh();
       }}
     >
       <DialogContent className=" max-w-fit border-none outline-none shadow-none bg-transparent p-0 m-0 z-0">

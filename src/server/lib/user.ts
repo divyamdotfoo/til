@@ -32,8 +32,7 @@ export const getUserProfile = async (userIdOrName: string) => {
       })
       .from(users)
       .where(or(eq(users.id, userIdOrName), eq(users.username, userIdOrName)))
-      .leftJoin(tils, eq(tils.userId, users.id))
-      .all();
+      .leftJoin(tils, eq(tils.userId, users.id));
     if (!userData.length) return null;
     const author = userData[0].author;
     const authorTils = userData.map((row) => row.til).filter((n) => n != null);
@@ -48,7 +47,7 @@ export const getUserProfile = async (userIdOrName: string) => {
         id: tils.id,
         createdAt: tils.createdAt,
 
-        isLiked: sql<number>`upvote.userId IS NOT NULL`.as("isLiked"),
+        isLiked: sql<number>`upvote.user_id IS NOT NULL`.as("isLiked"),
       },
     })
     .from(users)
@@ -57,8 +56,7 @@ export const getUserProfile = async (userIdOrName: string) => {
     .leftJoin(
       upvotes,
       and(eq(upvotes.tilId, tils.id), eq(upvotes.userId, users.id))
-    )
-    .all();
+    );
   if (!userData.length) return null;
   const author = userData[0].author;
   const authorTils = userData.map((row) => row.til).filter((n) => n != null);

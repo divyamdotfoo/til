@@ -72,7 +72,7 @@ export async function generateMetadata({
 
   const searchParams = new URLSearchParams({
     title: tilData.title,
-    createdAt: getTimeSincePosted(tilData.createdAt),
+    createdAt: getTimeSincePosted(tilData.createdAt.toDateString()),
   });
 
   if (tilData.user.image) searchParams.append("avatar", tilData.user.image);

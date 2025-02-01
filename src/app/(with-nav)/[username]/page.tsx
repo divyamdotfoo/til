@@ -48,7 +48,8 @@ export default async function Page({
               </span>
             </p>
             <p className="font-medium text-muted-foreground">
-              Joined {getDateForJoined(userData.author.createdAt)}
+              Joined{" "}
+              {getDateForJoined(userData.author.createdAt.toDateString())}
             </p>
           </div>
         </div>
@@ -69,7 +70,7 @@ export default async function Page({
                 >
                   {til.title}
                 </Link>
-                <TimeSincePosted dt={til.createdAt} />
+                <TimeSincePosted dt={til.createdAt.toDateString()} />
               </div>
             </div>
           ))}

@@ -48,7 +48,7 @@ export const getTil = async (
       username: users.username,
       image: users.image,
 
-      isLiked: sql`upvote.userId IS NOT NULL`.as("isLiked"),
+      isLiked: sql`upvote.user_id IS NOT NULL`.as("isLiked"),
     })
     .from(tils)
     .where(eq(tils.id, id))
@@ -125,7 +125,7 @@ export const getAllTil = async (
         createdAt: tils.createdAt,
         image: users.image,
         name: users.name,
-        isLiked: sql`upvote.userId IS NOT NULL`.as("isLiked"),
+        isLiked: sql`upvote.user_id IS NOT NULL`.as("isLiked"),
       })
       .from(tils)
       .innerJoin(users, eq(tils.userId, users.id))
@@ -134,6 +134,24 @@ export const getAllTil = async (
         and(eq(upvotes.tilId, tils.id), eq(upvotes.userId, userId))
       );
   }
+};
+
+export const getUsersTil = async (userId: string) => {
+  if (!userId) throw new Error();
+  return db
+    .select({
+      id: tils.id,
+      upvotes: tils.upvotes,
+      userId: tils.userId,
+      username: users.username,
+      title: tils.title,
+      createdAt: tils.createdAt,
+      image: users.image,
+      name: users.name,
+      isLiked: sql`false`.as("isLiked"),
+    })
+    .from(tils)
+    .innerJoin(users, eq(tils.userId, users.id));
 };
 
 export const getMetaDataForTil = (id: string) => {

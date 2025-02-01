@@ -54,6 +54,7 @@ export function PostTil({
       await addTil({ title, content: md });
       setLoading(false);
       router.back();
+      router.refresh();
     } catch (e) {
       console.log(e);
       setLoading(false);

@@ -1,14 +1,16 @@
-import { relations, sql } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   integer,
-  sqliteTable,
   text,
   primaryKey,
-} from "drizzle-orm/sqlite-core";
+  pgTable,
+  jsonb,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 import type { AdapterAccountType } from "next-auth/adapters";
 
-export const accounts = sqliteTable(
+export const accounts = pgTable(
   "account",
   {
     userId: text("userId")
@@ -32,20 +34,20 @@ export const accounts = sqliteTable(
   })
 );
 
-export const sessions = sqliteTable("session", {
+export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+  expires: timestamp("expires").defaultNow(),
 });
 
-export const verificationTokens = sqliteTable(
+export const verificationTokens = pgTable(
   "verificationToken",
   {
     identifier: text("identifier").notNull(),
     token: text("token").notNull(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+    expires: timestamp("expires").notNull(),
   },
   (verificationToken) => ({
     compositePk: primaryKey({
@@ -54,35 +56,31 @@ export const verificationTokens = sqliteTable(
   })
 );
 
-export const users = sqliteTable("author", {
+export const users = pgTable("author", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => nanoid(10)),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  emailVerified: timestamp("email_verified"),
   image: text("image"),
   bio: text("bio"),
   username: text("username"),
   upvotes: integer("upvotes").default(0),
-  createdAt: text("created_at")
-    .notNull()
-    .$defaultFn(() => sql`(current_timestamp)`),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const tils = sqliteTable("til", {
+export const tils = pgTable("til", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => nanoid(12)),
   title: text("title").notNull(),
-  content: text("content", { mode: "json" }),
+  content: jsonb("content"),
   upvotes: integer("upvotes").notNull().default(0),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  createdAt: text("created_at")
-    .notNull()
-    .$defaultFn(() => sql`(current_timestamp)`),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const userRelations = relations(users, ({ many }) => ({
@@ -96,16 +94,13 @@ export const tilsRelations = relations(tils, ({ one }) => ({
   }),
 }));
 
-export const upvotes = sqliteTable(
-  "upvote",
-  {
-    userId: text("userId").notNull(),
-    tilId: text("tilId").notNull(),
-  },
-  (upvote) => ({
-    pk: primaryKey({ name: "id", columns: [upvote.tilId, upvote.userId] }),
-  })
-);
+export const upvotes = pgTable("upvote", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid(10)),
+  userId: text("user_id").notNull(),
+  tilId: text("til_id").notNull(),
+});
 
 export type User = typeof users.$inferSelect;
 
